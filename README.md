@@ -1,4 +1,4 @@
-# Welcome to Introduction to Angular 2 and TypeScript!
+# Welcome to Comprehensive Angular 2 and TypeScript!
 
 ## Instructor
 
