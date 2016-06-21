@@ -4,49 +4,23 @@ class Country {
 	constructor(public name: string, public code: string) {}
 }
 
-class Car {
-	constructor(
-		public make: string,
-		public model: string,
-		public year: string,
-		public color: string
-	) { }
-}
-
 @Component({
   selector: 'my-app',
   template: `<h1>{{message | uppercase}}</h1>
 	<input type="text" [(ngModel)]="message"><br>
 
-	Color: Filter: <input type="text" [(ngModel)]="colorFilter">
+	Color Filter: <input type="text" [(ngModel)]="colorFilter">
 	<ul>
-		<li *ngFor="let color of sortedColors">{{color}}</li>
+		<li *ngFor="let color of optimizedSortedColors">{{color}}</li>
 	</ul>
+	New Color: <input type="text" [(ngModel)]="newColor">
+	<button (click)="addColor()">Add Color</button>
 
 	<ul>
 		<li *ngFor="let country of countries">
 			{{country.code}} - {{country.name}}
 		</li>
 	</ul>
-
-	<table>
-		<thead>
-			<tr>
-				<th>Make</th>
-				<th>Model</th>
-				<th>Year</th>
-				<th>Color</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor="let car of cars">
-				<td>{{car.make}}</td>
-				<td>{{car.model}}</td>
-				<td>{{car.year}}</td>
-				<td>{{car.color}}</td>
-			</tr>
-		</tbody>
-	</table>
 	`,
 	// styles: [
 	// 	'td { color:red; }'
@@ -64,6 +38,12 @@ export class AppComponent {
 	_filteredColors: any[];
 
 	get sortedColors(): string[] {
+
+		return this.colors.filter(color =>
+			this.colorFilter.length === 0 || color.startsWith(this.colorFilter)).sort();
+	}
+
+	get optimizedSortedColors(): string[] {
 		console.log('sorted colors called');
 
 		if (this._lastColors != this.colors) {
@@ -82,6 +62,12 @@ export class AppComponent {
 			this.colorFilter.length === 0 || color.startsWith(this.colorFilter));
 	}
 
+	addColor() {
+		//this.colors.push(this.newColor);
+		this.colors = this.colors.concat(this.newColor);
+		this.newColor = '';
+	}
+
 
 
 
@@ -90,12 +76,6 @@ export class AppComponent {
 		new Country('China', 'CN'),
 		new Country('India', 'IN'),
 		new Country('Russia', 'RU')
-	];
-
-	cars: Car[] = [
-		new Car('Lambourghini', 'Diablo', '2018', 'red'),
-		new Car('Ford', 'Pinto', '1978', 'hot pink'),
-		new Car('Gily', 'S', '2015', 'teal')
 	];
 
 	message: string = 'Hi Class!';

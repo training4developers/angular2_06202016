@@ -1,0 +1,65 @@
+import { Component } from '@angular/core';
+
+class Car {
+	constructor(
+		public make: string,
+		public model: string,
+		public year: number,
+		public color: string
+	) { }
+}
+
+@Component({
+  selector: 'my-app',
+  template: `Color Filter: <input type="text" [(ngModel)]="colorFilter">
+	<table>
+		<thead>
+			<tr>
+				<th>Make</th>
+				<th>Model</th>
+				<th>Year</th>
+				<th>Color</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let car of sortedCars">
+				<td>{{car.make}}</td>
+				<td>{{car.model}}</td>
+				<td>{{car.year}}</td>
+				<td>{{car.color}}</td>
+			</tr>
+		</tbody>
+	</table>`
+})
+export class AppComponent {
+
+	colorFilter: string = '';
+
+	cars: Car[] = [
+		new Car('Lambourghini', 'Diablo', 2018, 'red'),
+		new Car('Ford', 'Pinto', 1978, 'hot pink'),
+		new Car('Gily', 'S', 2015, 'teal')
+	];
+
+	private lastCars: Car[] = null;
+	private filteredCars: any[];
+
+	get sortedCars() {
+
+		if (this.lastCars !== this.cars) {
+			this.filteredCars = [];
+			this.cars.sort((carA, carB) => carA.year - carB.year);
+			this.lastCars = this.cars;
+		}
+
+		if (this.filteredCars[this.colorFilter]) {
+			return this.filteredCars[this.colorFilter];
+		}
+
+		return this.filteredCars[this.colorFilter] = this.cars.filter(car =>
+			this.colorFilter.length === 0 || car.color.startsWith(this.colorFilter)
+		);
+
+	}
+
+}
