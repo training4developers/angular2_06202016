@@ -1,0 +1,40 @@
+// import { bootstrap }    from '@angular/platform-browser-dynamic';
+// import { AppComponent } from './app.component.ts';
+//
+// bootstrap(AppComponent);
+
+// interface IPerson {
+// 	firstName: string,
+// 	lastName: string
+// }
+//
+// class Person implements IPerson {
+// 	constructor(public firstName: string, public lastName: string) { }
+//
+// 	getFullName() {
+//
+// 	}
+// }
+//
+// function doIt(p: IPerson) {
+// 	console.log(p.firstName);
+// }
+//
+// doIt({ firstName: 'Alex', lastName: 'Torres' });
+
+const { firstName, lastName } = {
+	firstName: 'Bob', lastName: 'Martin'};
+
+function doIt({ firstName, lastName }) {
+	console.log(firstName);
+}
+
+doIt({ firstName: 'Timmy', lastName: 'Tiny' });
+
+// function doIt2(first, second, third) {
+//
+// }
+//
+// var items = [1,2,3];
+//
+// doIt2(...items);

@@ -1,0 +1,93 @@
+// import { bootstrap }    from '@angular/platform-browser-dynamic';
+// import { AppComponent } from './app.component.ts';
+//
+// bootstrap(AppComponent);
+
+// var o = {
+// 	_name: 'Bob'
+// }
+//
+// Object.defineProperty('name', {
+// 	configurable: true,
+// 	enumerable: true,
+// 	get: function() {
+// 		return this._name;
+// 	},
+// 	set: function(value) {
+// 		this._name = value;
+// 	}
+// });
+//
+// o.name = "Jim";
+
+
+// class Person {
+//
+// 	get name() {
+// 		return this._name;
+// 	}
+//
+// 	set name(value) {
+// 		this._name = value;
+// 	}
+//
+// 	constructor(name) {
+// 		this._name
+// 	}
+//
+// }
+
+interface IPerson {
+	firstName: string,
+	lastName: string,
+	getFullName(): string
+}
+
+abstract class Person implements IPerson {
+
+	constructor(
+		public firstName: string,
+		public lastName: string
+	) { }
+
+	getFullName(): string {
+		return `${this.firstName} ${this.lastName}`;
+	}
+
+	abstract getRecordInfo(): string;
+
+}
+
+function decorateMe(target) {
+	console.log('decorateMe');
+	console.dir(target);
+
+	target.create = function(studentId: number, name: string): Student {
+		const nameParts = name.split(' ');
+		return new Student(studentId, nameParts[0], nameParts[1]);
+	};
+}
+
+@decorateMe
+class Student extends Person {
+
+	// static create(studentId: number, name: string): Student {
+	// 	const nameParts = name.split(' ');
+	// 	return new Student(studentId, nameParts[0], nameParts[1]);
+	// }
+
+	constructor(public studentId: number, firstName: string, lastName: string) {
+		super(firstName, lastName);
+		this.studentId = studentId;
+	}
+
+	getRecordInfo(): string {
+		return `${this.studentId} ${this.lastName}, ${this.firstName}`;
+	}
+
+}
+
+console.dir(Student);
+
+const s = new Student(1, 'Bob', 'Martin');
+console.dir(s);

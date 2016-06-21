@@ -1,0 +1,125 @@
+// import { bootstrap }    from '@angular/platform-browser-dynamic';
+// import { AppComponent } from './app.component.ts';
+//
+// bootstrap(AppComponent);
+
+// const h = "Hi!";
+//
+// function doIt() {
+// 	var g;
+//
+// 	g = 10;
+//
+// 	if (true) {
+//
+// 	}
+//
+// 	console.log(g);
+//
+// }
+//
+// doIt();
+
+// class Person {
+//
+// 	constructor(firstName, lastName) {
+// 		this.firstName = firstName;
+// 		this.lastName = lastName;
+// 	}
+//
+// 	getFullName() {
+// 		return this.firstName + ' ' + this.lastName;
+// 	}
+//
+// }
+//
+// var p = new Person('Bob', 'Smith');
+// console.log(p.getFullName());
+// console.dir(p);
+
+// var alex = {
+// 	amt: 2000,
+// 	address: {
+// 		city: 'Wylie',
+// 		country: 'Texas'
+// 	},
+// 	getAddress: function() {
+// 		return mary.getAddress();
+// 	}
+// };
+//
+// var mary = {
+// 	address: {
+// 		city: 'San Juan',
+// 		country: 'Puerto Rico'
+// 	},
+// 	getAddress: alex.getAddress
+// }
+//
+// console.log(mary.getAddress());
+
+// var jenalie = Object.create(alex);
+// jenalie.amt = 10;
+// delete jenalie.amt;
+//
+// console.log(jenalie.address.city);
+// jenalie.address.city = 'Paris';
+// console.log(jenalie.address.city);
+//
+// console.log(jenalie.amt);
+// console.dir(jenalie);
+
+'use strict';
+
+// function doIt() {
+// 	console.log('I did it!');
+// 	console.dir(this);
+// }
+//
+// doIt();
+//
+// var o ={
+// 	id: 2,
+// 	doIt: doIt
+// };
+//
+// o.doIt();
+//
+// console.log(o.doIt === doIt);
+
+//
+//
+// function outer() {
+//
+// 	var t = 10;
+//
+// 	return function inner() {
+// 		console.log(t);
+// 	};
+// }
+//
+// var fn = outer();
+// fn();
+// console.dir(fn);
+
+var o = {
+	id: 3,
+	outer: function() {
+		// console.dir(this);
+		console.log(this.id);
+
+		//var self = this;
+
+		const inner = () => {
+			console.log(this.id);
+		};
+
+		// function inner() {
+		// 	console.log(self.id);
+		// }
+
+		inner();
+	}
+};
+
+o.outer();
