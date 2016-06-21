@@ -1,12 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 
-class Car {
+interface ICar {
+	make: string;
+	model: string;
+	year: number;
+	color: string;
+}
+
+class Car implements ICar {
 	constructor(
-		public make: string,
-		public model: string,
-		public year: number,
-		public color: string
+		public make: string = '',
+		public model: string = '',
+		public year: number = undefined,
+		public color: string = ''
 	) { }
+}
+
+@Injectable()
+export class Cars {
+
+	private cars: ICar[] = [
+		new Car('Lambourghini', 'Diablo', 2018, 'red'),
+		new Car('Ford', 'Pinto', 1978, 'hot pink'),
+		new Car('Gily', 'S', 2015, 'teal')
+	];
+
+	getAll(): ICar[] {
+		return this.cars;
+	}
+
+	add(car: ICar): Cars {
+		this.cars = this.cars.concat(car);
+		return this;
+	}
+
 }
 
 @Component({
@@ -32,49 +59,39 @@ class Car {
 	</table>
 	<form>
 		<label>
-			Make <input type="text" [(ngModel)]="carMake">
+			Make <input type="text" [(ngModel)]="newCar.make">
 		</label>
 		<label>
-			Model <input type="text" [(ngModel)]="carModel">
+			Model <input type="text" [(ngModel)]="newCar.model">
 		</label>
 		<label>
-			Year <input type="number" [(ngModel)]="carYear">
+			Year <input type="number" [(ngModel)]="newCar.year">
 		</label>
 		<label>
-			Color <input type="text" [(ngModel)]="carColor">
+			Color <input type="text" [(ngModel)]="newCar.color">
 		</label>
 		<button type="button" (click)="addCar()">Add Car</button>
-	</form>`
+	</form>`,
+	providers: [ Cars ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
+	constructor(private carsSvc: Cars) { }
+
+	cars: ICar[] = [];
 	colorFilter: string = '';
-	carMake: string;
-	carModel: string;
-	carYear: number;
-	carColor: string;
+	newCar: ICar = { make: '', model: '', year: undefined, color: '' };
 
-	cars: Car[] = [
-		new Car('Lambourghini', 'Diablo', 2018, 'red'),
-		new Car('Ford', 'Pinto', 1978, 'hot pink'),
-		new Car('Gily', 'S', 2015, 'teal')
-	];
-
-	private lastCars: Car[] = null;
+	private lastCars: ICar[] = null;
 	private filteredCars: any[];
 
+	ngOnInit() {
+		this.cars = this.carsSvc.getAll();
+	}
+
 	addCar(): void {
-
-		const newCar = new Car(
-			this.carMake, this.carModel, this.carYear, this.carColor
-		);
-
-		this.cars = this.cars.concat(newCar);
-
-		this.carMake = '';
-		this.carModel = '';
-		this.carYear = undefined;
-		this.carColor = '';
+		this.cars = this.carsSvc.add(this.newCar).getAll();
+		this.newCar = new Car();
 	}
 
 	get sortedCars() {
