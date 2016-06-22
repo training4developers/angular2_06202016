@@ -1,0 +1,42 @@
+import { Component, OnInit } from '@angular/core';
+//import { ROUTER_DIRECTIVES } from '@angular/router';
+
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({ name: 'myUpperCase' })
+export class MyUpperCasePipe implements PipeTransform {
+	transform(value: string): string {
+		return value.toUpperCase();
+	}
+}
+
+@Pipe({ name: 'myAppend' })
+export class MyAppendPipe implements PipeTransform {
+	transform(value: string, strToAppend: string): string {
+		return value + strToAppend;
+	}
+}
+
+@Component({
+	selector: 'my-app',
+	template: `<div>{{message | myUpperCase | myAppend:'!!!!!!!'}}</div>`,
+	pipes: [ MyUpperCasePipe, MyAppendPipe ]
+})
+export class AppComponent {
+	message: string = "Weicong is the best!";
+}
+
+
+// @Component({
+//   selector: 'my-app',
+//   template: `<h1>Car Manager</h1>
+// 	<router-outlet></router-outlet>`,
+// 	directives: [ ROUTER_DIRECTIVES ]
+// })
+// export class AppComponent implements OnInit {
+//
+// 	ngOnInit() {
+//
+// 	}
+//
+// }

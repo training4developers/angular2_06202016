@@ -1,0 +1,15 @@
+Ellipsis Exercise
+
+1. Add an input box, and template variable mapped to the a property on the
+component
+2. Create a new pipe named 'MyEllipsis'
+3. The pipe should accept 1 parameter in addition to the value, that parameter
+should specify the number of characters before the ellipsis it shown
+4. Apply the ellipsis filter to the template variable
+5. Reload your page, type in the box, and verify that once you hit the specified
+character length, the ellipsis appears
+
+Once you done with the exercise...
+Do the midcourse...
+
+http://my.accelebrate.com/evaluations

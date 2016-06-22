@@ -1,0 +1,19 @@
+First Exercise
+
+1. Create a new column for your car: price
+2. Populate your car data with a price
+3. Format the price column in the table with the currency pipe
+
+Second Exercise
+
+1. Copy and paste car data to create 10 car objects in your array of cars
+2. Use the slice filter, and two buttons (Previous & Next) to setup simple pagination
+3. 3 records per page should be displayed
+4. On the first page, disable the previous button
+5. On the last page, disable the next button
+
+<button (click)="clickMe()" [disabled]="active()">Click Me</button>
+
+active() {
+	return true;
+}

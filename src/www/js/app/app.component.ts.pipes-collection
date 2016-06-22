@@ -1,0 +1,21 @@
+import { Component, OnInit } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
+
+
+@Pipe({ name: 'greaterThan' })
+export class GreaterThanPipe implements PipeTransform {
+	transform(values: number[], greaterThanValue: number) {
+		return values.filter(num => num > greaterThanValue);
+	}
+}
+
+@Component({
+	selector: 'my-app',
+	template: `
+		<div>{{numbers | greaterThan:5}}</div>
+	`,
+	pipes: [ GreaterThanPipe ]
+})
+export class AppComponent {
+	numbers: number[] = [1,2,3,4,5,6,7,8,9];
+}

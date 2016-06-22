@@ -1,0 +1,48 @@
+import { Component, OnInit } from '@angular/core';
+//import { ROUTER_DIRECTIVES } from '@angular/router';
+
+@Component({
+	selector: 'my-app',
+	template: `
+		<div>{{someDate | date:'short'}}</div>
+		<div>{{someCurrency | currency:'USD':true:'2.2-2'}}</div>
+		<ul>
+			<li *ngFor="let color of colors | slice:2:4">{{color}}</li>
+		</ul>
+		<div>{{someObject | json | uppercase}}</div>
+		<button (click)="clickMe()" [disabled]="active()">Click Me</button>
+	`
+})
+export class AppComponent {
+	someDate: Date = new Date();
+	someCurrency: number = 25;
+	colors = ['red','white','blue','green','saffron','gold'];
+	someObject = {
+		id: 1,
+		fn: 'Bob',
+		ln: 'Martin'
+	};
+
+	active() {
+		return true;
+	}
+
+	clickMe() {
+		console.log('I was clicked!');
+	}
+}
+
+
+// @Component({
+//   selector: 'my-app',
+//   template: `<h1>Car Manager</h1>
+// 	<router-outlet></router-outlet>`,
+// 	directives: [ ROUTER_DIRECTIVES ]
+// })
+// export class AppComponent implements OnInit {
+//
+// 	ngOnInit() {
+//
+// 	}
+//
+// }
