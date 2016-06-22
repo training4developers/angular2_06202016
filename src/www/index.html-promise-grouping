@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Angular 2 QuickStart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- 1. Load libraries -->
+     <!-- Polyfill(s) for older browsers -->
+    <script src="libs/core-js/client/shim.min.js"></script>
+    <script src="libs/zone.js/dist/zone.js"></script>
+    <script src="libs/reflect-metadata/Reflect.js"></script>
+    <script src="libs/systemjs/dist/system.src.js"></script>
+    <!-- 2. Configure SystemJS -->
+    <script src="js/systemjs.config.js"></script>
+    <script>
+      //System.import('app').catch(function(err){ console.error(err); });
+    </script>
+		<script>
+
+			function doIt(fn) {
+				fn('do it');
+			}
+
+			doIt(function(t) {
+				console.log(t);
+			});
+
+			const youngMan = new Promise(function youngLady(resolve, reject) {
+
+				setTimeout(function() {
+					console.log('young lady says yes!');
+					resolve('her parents are making her');
+					//reject('young lady has fallen is love with the young man\'s friend')
+				},2000);
+
+			});
+
+			youngMan.then(function(results) {
+				console.log(results);
+				console.log('yay, you are getting married...');
+
+				console.log('plan a bachelor party...');
+
+				return new Promise(function(resolve, reject) {
+
+					setTimeout(function() {
+						resolve('bachelor party planned...')
+					}, 2000)
+
+				});
+
+			}).then(function(results) {
+				console.log(results);
+				console.log("finish getting ready...")
+
+			}).catch(function(results) {
+				console.log(results);
+				console.log('no, you are not getting married...');
+			});
+
+			console.log("young man is waiting...");
+
+
+
+		</script>
+		<base href="/">
+  </head>
+  <!-- 3. Display the application -->
+  <body>
+    <my-app>Loading...</my-app>
+  </body>
+</html>

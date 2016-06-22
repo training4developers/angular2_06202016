@@ -1,0 +1,75 @@
+import { Component, OnInit } from '@angular/core';
+
+import { Observable, Subscription } from 'rxjs/Rx';
+
+@Component({
+	selector: 'my-app',
+	template: `<h1>Hi!</h1>`
+})
+export class AppComponent implements OnInit {
+
+	ngOnInit() {
+
+		const button = document.querySelector('button');
+
+		console.dir(button);
+
+		const o = Observable.fromEvent(button, 'click');
+
+		const subscription: Subscription =  o.subscribe(function() {
+			console.log('clicks');
+		});
+
+		setTimeout(function() {
+
+			subscription.unsubscribe()
+
+		}, 5000);
+
+		// const s = Observable.create(function(observer) {
+		//
+		// 	button.addEventListener('click', function() {
+		// 		observer.next();
+		// 	});
+		//
+		// });
+		//
+		// s.subscribe(function() {
+		// 	console.log('clicks');
+		// });
+
+		// function createObservable(observerFn) {
+		//
+		// 	const fns = [];
+		//
+		// 	var o = {
+		// 		next: function(data) {
+		// 			fns.forEach(function(fn) {
+		// 				fn(data);
+		// 			})
+		// 		}
+		// 	}
+		//
+		// 	observerFn(o)
+		//
+		// 	return {
+		// 		subscribe: function(fn) {
+		// 			fns.push(fn);
+		// 		}
+		// 	}
+		//
+		// }
+
+		// var s = createObservable(function(observer) {
+		// 	button.addEventListener('click', function() {
+		// 		observer.next();
+		// 	});
+		// });
+		//
+		// s.subscribe(function() {
+		// 	console.log('clicks');
+		// });
+
+	}
+
+}

@@ -15,14 +15,31 @@
     <!-- 2. Configure SystemJS -->
     <script src="js/systemjs.config.js"></script>
     <script>
-      System.import('app').catch(function(err){ console.error(err); });
+      //System.import('app').catch(function(err){ console.error(err); });
     </script>
+		<script>
+
+			var
+				p1 = new Promise(resolve => setTimeout(() => resolve('a'), 2000)),
+				p2 = new Promise(resolve => setTimeout(() => resolve('b'), 4000)),
+				p3 = new Promise(resolve => setTimeout(() => resolve('c'), 6000)),
+				p4 = new Promise(resolve => setTimeout(() => resolve('d'), 8000));
+
+			p1.then(() => console.log('a resolved'));
+			p2.then(() => console.log('b resolved'));
+			p3.then(() => console.log('c resolved'));
+			p4.then(() => console.log('d resolved'));
+
+			Promise.all([p1,p2,p3,p4]).then(() => {
+				console.log('all done');
+			});
+
+
+		</script>
 		<base href="/">
   </head>
   <!-- 3. Display the application -->
   <body>
     <my-app>Loading...</my-app>
-
-		<button>Click Me</button>
   </body>
 </html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Angular 2 QuickStart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- 1. Load libraries -->
+     <!-- Polyfill(s) for older browsers -->
+    <script src="libs/core-js/client/shim.min.js"></script>
+    <script src="libs/zone.js/dist/zone.js"></script>
+    <script src="libs/reflect-metadata/Reflect.js"></script>
+    <script src="libs/systemjs/dist/system.src.js"></script>
+    <!-- 2. Configure SystemJS -->
+    <script src="js/systemjs.config.js"></script>
+    <script>
+      //System.import('app').catch(function(err){ console.error(err); });
+    </script>
+		<script>
+
+			console.log('async demos');
+
+			var t = 3;
+
+			try {
+
+				var counter =0;
+
+				counter++
+				setTimeout(function() {
+					counter--;
+					console.log("timeout expired 2", t);
+					//throw "an error";
+					if (counter=== 0) {
+						doSomething();
+					}
+				}, 2000);
+
+				counter++
+				setTimeout(function() {
+					counter--;
+					console.log("timeout expired 2", t);
+					//throw "an error";
+					if (counter=== 0) {
+						doSomething();
+					}
+				}, 2000);
+
+				counter++
+				setTimeout(function() {
+					counter--;
+					console.log("timeout expired 2", t);
+					//throw "an error";
+					if (counter=== 0) {
+						doSomething();
+					}
+				}, 2000);
+
+
+
+		setTimeout(function() {
+			console.log("timeout expired 1", t);
+					setTimeout(function() {
+						console.log("timeout expired 2", t);
+								setTimeout(function() {
+									console.log("timeout expired 2", t);
+									//throw "an error";
+								}, 2000);
+						//throw "an error";
+					}, 2000);
+			//throw "an error";
+		}, 2000);
+
+			} catch(err) {
+				console.log('caught the error');
+			}
+
+			console.log("doing it...");
+
+
+		</script>
+		<base href="/">
+  </head>
+  <!-- 3. Display the application -->
+  <body>
+    <my-app>Loading...</my-app>
+  </body>
+</html>

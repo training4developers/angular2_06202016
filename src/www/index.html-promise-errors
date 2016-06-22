@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Angular 2 QuickStart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- 1. Load libraries -->
+     <!-- Polyfill(s) for older browsers -->
+    <script src="libs/core-js/client/shim.min.js"></script>
+    <script src="libs/zone.js/dist/zone.js"></script>
+    <script src="libs/reflect-metadata/Reflect.js"></script>
+    <script src="libs/systemjs/dist/system.src.js"></script>
+    <!-- 2. Configure SystemJS -->
+    <script src="js/systemjs.config.js"></script>
+    <script>
+      //System.import('app').catch(function(err){ console.error(err); });
+    </script>
+		<script>
+
+			// Erik's Promise Chart
+			// undefined === resolved promise
+			// any other value === resolve promise
+			// promises === ?
+			// throw Error === rejected promise
+			// Promise.reject() === rejected promise
+
+			var p = new Promise(function(resolve) {
+				resolve();
+			});
+
+			p.then(function() {
+				console.log('a');
+				return new Promise(resolve => setTimeout(() => resolve(), 2000));
+			}).then(function() {
+				console.log('b');
+			}).then(function() {
+				console.log('c');
+				throw "social security lockbox is empty";
+			}).then(function() {
+				console.log('d');
+			}).then(function() {
+				console.log('e');
+			}).catch(function(results) {
+				console.log('err', results);
+			}).then(function() {
+				console.log('f');
+			});
+
+		</script>
+		<base href="/">
+  </head>
+  <!-- 3. Display the application -->
+  <body>
+    <my-app>Loading...</my-app>
+  </body>
+</html>
