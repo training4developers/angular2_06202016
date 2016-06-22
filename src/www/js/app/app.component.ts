@@ -1,44 +1,66 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit, OpaqueToken, Inject, Optional } from '@angular/core';
 
-import { Observable, Subscription } from 'rxjs/Rx';
+const DoItToken = new OpaqueToken('doit');
 
-import { Pipe, PipeTransform } from '@angular/core';
+let t: number = 0;
 
-// @Pipe({ name: 'myAsync', pure: false })
-// export class MyAsyncPipe implements PipeTransform {
-// 	transform(value: any) {
-// 		value.subscribe(function(v) {
-// 			return v;
-// 		})
-// 	}
-// }
+interface DoIt {
+	doIt(): void;
+}
+
+@Injectable()
+export class A implements DoIt {
+
+	constructor() {
+		console.log('new a', t++);
+	}
+
+	doIt() {
+		console.log('did A');
+	}
+}
+
+@Injectable()
+export class B implements DoIt {
+	doIt() {
+		console.log('did B');
+	}
+}
+
+const c = {
+	doIt: () => console.log('did C')
+}
+
+var useA = true;
+
+const getSvc = (a: A) => {
+	if (useA) {
+		return a;
+	} else {
+		return new B();
+	}
+};
 
 
 @Component({
 	selector: 'my-app',
-	template: `<h1>{{message | async}}</h1>`
+	template: `Hi!`,
+	providers: [
+		A,
+		{ provide: DoItToken, useFactory: getSvc, deps: [ A ] }
+	]
 })
 export class AppComponent implements OnInit {
 
-	message: Observable<number>;
+	constructor(
+		private a: A,
+		@Inject(DoItToken) private b: DoIt,
+		@Optional() private c: B
+	) { }
 
 	ngOnInit() {
-
-		//var o: Observable<number> = Observable.range(1,5);
-
-		var o: Observable<number> = Observable.create(function(observer) {
-
-			var t=0;
-
-			setInterval(function() {
-				observer.next(t++);
-			},500);
-
-		});
-
-		this.message = o.map(num => num * 2);
-
-
+		this.a.doIt();
+		this.b.doIt();
 	}
 
 }
