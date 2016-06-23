@@ -1,4 +1,5 @@
-import { Component, OnInit, Injectable, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Injectable, Inject,
+	Input, Output, EventEmitter, OpaqueToken } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
@@ -26,10 +27,56 @@ export class Widgets {
 
 }
 
+const Logger = new OpaqueToken('logger');
+
+interface ILogger {
+	log(entry: IEntry): void;
+}
+
+interface IEntry {
+	message: string;
+}
+
+@Injectable()
+export class ConsoleLogger implements ILogger {
+
+	log(entry: IEntry): void {
+		console.log(entry.message);
+	}
+
+}
+
+declare var io;
+
+@Injectable()
+export class SocketLogger implements ILogger {
+
+	private socket = io();
+
+	log(entry: IEntry): void {
+		this.socket.emit('log', entry);
+	}
+
+}
+
+function loggerFactory(): ILogger {
+	if (typeof io === 'undefined') {
+		return new ConsoleLogger();
+	} else {
+		return new SocketLogger();
+	}
+}
+
+function getConsoleLogger() {
+	console.log('I was called');
+	return new ConsoleLogger();
+}
+
 @Component({
 	selector: 'widget-list',
 	template: `<ul><li *ngFor="let widget of widgets">{{widget.name}}
-		<button (click)="editButton(widget._id)">Edit</button></li></ul>`
+		<button (click)="editButton(widget._id)">Edit</button></li></ul>`,
+	providers: [ { provide: Logger, useFactory: getConsoleLogger }]
 })
 export class WidgetList {
 
@@ -38,6 +85,8 @@ export class WidgetList {
 
 	@Output()
 	editWidget: EventEmitter<string> = new EventEmitter<string>();
+
+	constructor(@Inject(Logger) private logger: ILogger) { }
 
 	editButton(widgetId: string) {
 		this.editWidget.emit(widgetId);
@@ -48,15 +97,21 @@ export class WidgetList {
 @Component({
 	selector: 'my-app',
 	template: `<h1>Widget Manager</h1>
-	<widget-list [widgets]="widgets" (editWidget)="editWidget($event)"></widget-list>`,
-	providers: [ Widgets ],
+	<input type="checkbox" [(ngModel)]="showMe"> Show Me
+	<div *ngIf="showMe">
+	<widget-list [widgets]="widgets" (editWidget)="editWidget($event)"></widget-list>
+	</div>`,
+	providers: [ Widgets, { provide: Logger, useFactory: loggerFactory} ],
 	directives: [ WidgetList ]
 })
 export class AppComponent implements OnInit {
 
 	widgets: Widget[];
 
-	constructor(private widgetsSvc: Widgets) { }
+	constructor(
+		@Inject(Logger) private logger: ILogger,
+		private widgetsSvc: Widgets
+	) { }
 
 	ngOnInit() {
 		this.widgetsSvc.getAll().subscribe(results => {
@@ -65,7 +120,7 @@ export class AppComponent implements OnInit {
 	}
 
 	editWidget(widgetId: string) {
-		console.log(widgetId, "clicked");
+		this.logger.log({ message: `${widgetId} was clicked` });
 	}
 
 }
