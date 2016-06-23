@@ -1,98 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Injectable, Input } from '@angular/core';
+import { Http } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
 
-// First Name Pristine: {{personFirstName.pristine}}<br>
-// First Name Dirty: {{personFirstName.dirty}}<br>
-// First Name Touched: {{personFirstName.touched}}<br>
-// First Name Untouched: {{personFirstName.untouched}}<br>
-// First Name Valid: {{personFirstName.valid}}<br>
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/toPromise";
 
-interface Person {
-	firstName: string;
-	lastName: string;
-	age: number;
-	usCitizen: boolean;
-	stateOfResidency: string;
-	employmentStatus: string;
-	comments: string;
+interface Widget {
+	id: number;
+	name: string;
+	description: string;
+	color: string;
+	size: string;
+	quantity: number;
 }
 
+@Injectable()
+export class Widgets {
 
+	constructor(private http: Http) { }
+
+	getAll(): Observable<Widget[]> {
+		return this.http.get('http://t4dclass.herokuapp.com/api/widgets')
+			.map(res => res.json());
+	}
+
+}
+
+@Component({
+	selector: 'widget-list',
+	template: `<ul><li *ngFor="let widget of widgets">{{widget.name}}</li></ul>`
+})
+export class WidgetList {
+
+	@Input()
+	widgets: Widget[];
+
+}
 
 @Component({
 	selector: 'my-app',
-	template: `<form>
-		<div><label>
-			First Name:
-			<input type="text" [(ngModel)]="person.firstName" name="personFirstName" required  #personFirstName="ngModel">
-			<span *ngIf="!personFirstName.valid && personFirstName.touched">Please enter a first name</span><br>
-		</label></div>
-		<div><label>
-			Last Name:
-			<input type="text" [(ngModel)]="person.lastName" name="personLastName" required  #personLastName="ngModel">
-			<span *ngIf="!personLastName.valid && personLastName.touched">Please enter a last name</span><br>
-		</label></div>
-		<div><label>
-			Age:
-			<input type="number" [(ngModel)]="person.age" name="personAge">
-		</label></div>
-		<div><label>
-			US Citizen:
-			<input type="checkbox" [(ngModel)]="person.usCitizen" name="personUSCitizen">
-		</label></div>
-		<div><fieldset>
-
-			<legend>Employment Status</legend>
-
-			<div><label>
-				<input type="radio" [(ngModel)]="person.employmentStatus" name="personEmploymentStatus" value="active">
-				Active
-			</label></div>
-			<div><label>
-				<input type="radio" [(ngModel)]="person.employmentStatus" name="personEmploymentStatus" value="inactive">
-				Inactive
-			</label></div>
-			<div><label>
-				<input type="radio" [(ngModel)]="person.employmentStatus" name="personEmploymentStatus" value="retired">
-				Retired
-			</label></div>
-
-		</fieldset></div>
-		<div><label>
-			State of Residency:
-			<select [(ngModel)]="person.stateOfResidency" name="personStateOfResidency">
-				<option value="">Select One...</option>
-				<option *ngFor="let state of states" [value]="state.code">{{state.name}}</option>
-			</select>
-		</label></div>
-		<div><label>
-			Comments: <textarea name="personComments" [(ngModel)]="person.comments"></textarea>
-		</label></div>
-		<button type="button" (click)="submit()">Submit</button>
-	</form>`,
-	styles: [
-		'input.ng-invalid.ng-touched { border: 2px solid red; }'
-	]
+	template: `<h1>Widget Manager</h1>
+	<widget-list [widgets]="widgets"></widget-list>`,
+	providers: [ Widgets ],
+	directives: [ WidgetList ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-	states = [
-		{ code: 'TX', name: 'Texas' },
-		{ code: 'VA', name: 'Virginia' },
-		{ code: 'PR', name: 'Puerto Rico' }
-	];
+	widgets: Widget[];
 
-	person: Person = {
-		firstName: '',
-		lastName: '',
-		age: undefined,
-		usCitizen: true,
-		stateOfResidency: '',
-		employmentStatus: '',
-		comments: '',
-	};
+	constructor(private widgetsSvc: Widgets) { }
 
-	submit() {
-		console.dir(this.person);
+	ngOnInit() {
+		this.widgetsSvc.getAll().subscribe(results => {
+			this.widgets = results;
+		});
 	}
 
 }
