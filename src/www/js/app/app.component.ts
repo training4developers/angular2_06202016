@@ -1,66 +1,98 @@
-import { Component, Injectable, OnInit, OpaqueToken, Inject, Optional } from '@angular/core';
+import { Component } from '@angular/core';
 
-const DoItToken = new OpaqueToken('doit');
+// First Name Pristine: {{personFirstName.pristine}}<br>
+// First Name Dirty: {{personFirstName.dirty}}<br>
+// First Name Touched: {{personFirstName.touched}}<br>
+// First Name Untouched: {{personFirstName.untouched}}<br>
+// First Name Valid: {{personFirstName.valid}}<br>
 
-let t: number = 0;
-
-interface DoIt {
-	doIt(): void;
+interface Person {
+	firstName: string;
+	lastName: string;
+	age: number;
+	usCitizen: boolean;
+	stateOfResidency: string;
+	employmentStatus: string;
+	comments: string;
 }
 
-@Injectable()
-export class A implements DoIt {
-
-	constructor() {
-		console.log('new a', t++);
-	}
-
-	doIt() {
-		console.log('did A');
-	}
-}
-
-@Injectable()
-export class B implements DoIt {
-	doIt() {
-		console.log('did B');
-	}
-}
-
-const c = {
-	doIt: () => console.log('did C')
-}
-
-var useA = true;
-
-const getSvc = (a: A) => {
-	if (useA) {
-		return a;
-	} else {
-		return new B();
-	}
-};
 
 
 @Component({
 	selector: 'my-app',
-	template: `Hi!`,
-	providers: [
-		A,
-		{ provide: DoItToken, useFactory: getSvc, deps: [ A ] }
+	template: `<form>
+		<div><label>
+			First Name:
+			<input type="text" [(ngModel)]="person.firstName" name="personFirstName" required  #personFirstName="ngModel">
+			<span *ngIf="!personFirstName.valid && personFirstName.touched">Please enter a first name</span><br>
+		</label></div>
+		<div><label>
+			Last Name:
+			<input type="text" [(ngModel)]="person.lastName" name="personLastName" required  #personLastName="ngModel">
+			<span *ngIf="!personLastName.valid && personLastName.touched">Please enter a last name</span><br>
+		</label></div>
+		<div><label>
+			Age:
+			<input type="number" [(ngModel)]="person.age" name="personAge">
+		</label></div>
+		<div><label>
+			US Citizen:
+			<input type="checkbox" [(ngModel)]="person.usCitizen" name="personUSCitizen">
+		</label></div>
+		<div><fieldset>
+
+			<legend>Employment Status</legend>
+
+			<div><label>
+				<input type="radio" [(ngModel)]="person.employmentStatus" name="personEmploymentStatus" value="active">
+				Active
+			</label></div>
+			<div><label>
+				<input type="radio" [(ngModel)]="person.employmentStatus" name="personEmploymentStatus" value="inactive">
+				Inactive
+			</label></div>
+			<div><label>
+				<input type="radio" [(ngModel)]="person.employmentStatus" name="personEmploymentStatus" value="retired">
+				Retired
+			</label></div>
+
+		</fieldset></div>
+		<div><label>
+			State of Residency:
+			<select [(ngModel)]="person.stateOfResidency" name="personStateOfResidency">
+				<option value="">Select One...</option>
+				<option *ngFor="let state of states" [value]="state.code">{{state.name}}</option>
+			</select>
+		</label></div>
+		<div><label>
+			Comments: <textarea name="personComments" [(ngModel)]="person.comments"></textarea>
+		</label></div>
+		<button type="button" (click)="submit()">Submit</button>
+	</form>`,
+	styles: [
+		'input.ng-invalid.ng-touched { border: 2px solid red; }'
 	]
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
-	constructor(
-		private a: A,
-		@Inject(DoItToken) private b: DoIt,
-		@Optional() private c: B
-	) { }
+	states = [
+		{ code: 'TX', name: 'Texas' },
+		{ code: 'VA', name: 'Virginia' },
+		{ code: 'PR', name: 'Puerto Rico' }
+	];
 
-	ngOnInit() {
-		this.a.doIt();
-		this.b.doIt();
+	person: Person = {
+		firstName: '',
+		lastName: '',
+		age: undefined,
+		usCitizen: true,
+		stateOfResidency: '',
+		employmentStatus: '',
+		comments: '',
+	};
+
+	submit() {
+		console.dir(this.person);
 	}
 
 }

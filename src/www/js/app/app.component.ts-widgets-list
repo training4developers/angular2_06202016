@@ -1,0 +1,46 @@
+import { Component, OnInit, Injectable } from '@angular/core';
+import { Http } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
+
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/toPromise";
+
+interface Widget {
+	id: number;
+	name: string;
+	description: string;
+	color: string;
+	size: string;
+	quantity: number;
+}
+
+@Injectable()
+export class Widgets {
+
+	constructor(private http: Http) { }
+
+	getAll(): Observable<Widget[]> {
+		return this.http.get('http://t4dclass.herokuapp.com/api/widgets')
+			.map(res => res.json());
+	}
+
+}
+
+@Component({
+	selector: 'my-app',
+	template: `<ul><li *ngFor="let widget of widgets">{{widget.name}}</li></ul>`,
+	providers: [ Widgets ]
+})
+export class AppComponent implements OnInit {
+
+	widgets: Widget[];
+
+	constructor(private widgetsSvc: Widgets) { }
+
+	ngOnInit() {
+		this.widgetsSvc.getAll().subscribe(results => {
+			this.widgets = results;
+		});
+	}
+
+}
