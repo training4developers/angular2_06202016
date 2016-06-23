@@ -1,4 +1,4 @@
-import { Component, OnInit, Injectable, Input } from '@angular/core';
+import { Component, OnInit, Injectable, Input, Output, EventEmitter } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
@@ -28,19 +28,27 @@ export class Widgets {
 
 @Component({
 	selector: 'widget-list',
-	template: `<ul><li *ngFor="let widget of widgets">{{widget.name}}</li></ul>`
+	template: `<ul><li *ngFor="let widget of widgets">{{widget.name}}
+		<button (click)="editButton(widget._id)">Edit</button></li></ul>`
 })
 export class WidgetList {
 
 	@Input()
 	widgets: Widget[];
 
+	@Output()
+	editWidget: EventEmitter<string> = new EventEmitter<string>();
+
+	editButton(widgetId: string) {
+		this.editWidget.emit(widgetId);
+	}
+
 }
 
 @Component({
 	selector: 'my-app',
 	template: `<h1>Widget Manager</h1>
-	<widget-list [widgets]="widgets"></widget-list>`,
+	<widget-list [widgets]="widgets" (editWidget)="editWidget($event)"></widget-list>`,
 	providers: [ Widgets ],
 	directives: [ WidgetList ]
 })
@@ -54,6 +62,10 @@ export class AppComponent implements OnInit {
 		this.widgetsSvc.getAll().subscribe(results => {
 			this.widgets = results;
 		});
+	}
+
+	editWidget(widgetId: string) {
+		console.log(widgetId, "clicked");
 	}
 
 }
