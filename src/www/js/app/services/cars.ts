@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Http } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import 'rxjs/add/operator/map';
@@ -7,6 +7,10 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class CarsData {
+
+	options: RequestOptions = new RequestOptions({ headers: new Headers({
+		"Content-Type": "application/json"
+	})});
 
 	constructor(private http: Http) { }
 
@@ -26,6 +30,21 @@ export class CarsData {
 
 	get(carId: number): Observable<Object> {
 		return this.http.get('/api/cars/' + encodeURIComponent(carId.toString()))
+			.map(res => res.json());
+	}
+
+	insert(car: Object): Observable<Object> {
+		return this.http.post('/api/cars', JSON.stringify(car), this.options)
+			.map(res => res.json());
+	}
+
+	replace(car: any): Observable<Object> {
+		return this.http.put('/api/cars/' + encodeURIComponent(car.id.toString()),
+			JSON.stringify(car), this.options).map(res => res.json());
+	}
+
+	delete(carId: number): Observable<Object> {
+		return this.http.delete('/api/cars/' + encodeURIComponent(carId.toString()))
 			.map(res => res.json());
 	}
 

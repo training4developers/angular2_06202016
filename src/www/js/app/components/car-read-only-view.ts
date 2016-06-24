@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/Rx';
 @Component({
 	template: `<h2>Car Details</h2>
 		<car-details [car]="car"></car-details>
-	`,
+		<button type="button" (click)="returnToList()">Return to List</button>`,
 	directives: [ CarDetails ],
 	providers: [ CarsData ]
 })
@@ -33,5 +33,9 @@ export class CarReadOnlyView implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.sub.unsubscribe();
+	}
+
+	returnToList() {
+		this.router.navigate(['/']);
 	}
 }

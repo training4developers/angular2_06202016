@@ -39,10 +39,11 @@ export class CarTableView implements OnInit, OnDestroy {
 
 	carEdit(carId: number) {
 		console.log('edit', carId);
+		this.router.navigate(['/caredit', carId]);
 	}
 
 	createCar() {
-
+		this.router.navigate(['/carnew']);
 	}
 
 }
