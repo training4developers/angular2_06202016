@@ -1,6 +1,6 @@
 (function(global) {
 
-  var map = { 'app': 'js' };
+  var map = { 'app': '/js' };
 
   var packages = {
     'app': {

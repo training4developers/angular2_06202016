@@ -1,0 +1,101 @@
+import { Component, OnInit, OnDestroy, Directive,
+	ElementRef, HostListener, Output, EventEmitter,
+ 	TemplateRef, ViewContainerRef, Input } from '@angular/core';
+
+@Directive({
+	selector: '[simpleClick]'
+})
+export class SimpleClickDirective {
+	constructor(el: ElementRef) {
+		console.dir(el);
+		el.nativeElement.style.backgroundColor = 'blue';
+	}
+
+	@Output()
+	simpleClick: EventEmitter<void> = new EventEmitter<void>();
+
+	@HostListener('click') onClick() {
+		this.simpleClick.emit(null);
+	}
+}
+
+@Directive ({
+	selector: '[myClick]'
+})
+export class MyClickDirective implements OnInit, OnDestroy {
+
+	private el: any;
+	private clickFn: Function;
+
+	constructor(el: ElementRef) {
+		this.el = el.nativeElement;
+	}
+
+	@Output()
+	myClick: EventEmitter<void> = new EventEmitter<void>();
+
+	ngOnInit() {
+		console.log('wiring up');
+
+		this.clickFn = () => {
+			this.myClick.emit(null);
+		};
+
+		this.el.addEventListener('click', this.clickFn);
+	}
+
+	ngOnDestroy() {
+		console.log('wiring down');
+		this.el.removeEventListener('click', this.clickFn);
+	}
+
+}
+
+@Directive({
+	selector: '[myIf]'
+})
+export class MyIfDirective {
+
+	constructor(
+		private templateRef: TemplateRef<any>,
+		private viewContainerRef: ViewContainerRef
+	) {
+
+	}
+
+	@Input()
+	set myIf(condition: boolean) {
+		if (condition) {
+			this.viewContainerRef.createEmbeddedView(this.templateRef);
+		} else {
+			this.viewContainerRef.clear();
+		}
+	}
+
+}
+
+@Component({
+  selector: 'my-app',
+  template: `<input type="checkbox" [(ngModel)]="showMe">
+	<template [myIf]="showMe">
+		<div>
+			<div (myClick)='doIt()'>Hi!</div>
+		</div>
+	</template>
+	<div *myIf="showMe">
+		<div (myClick)='doIt()'>Hi!</div>
+	</div>`,
+	directives: [ MyClickDirective, MyIfDirective ]
+})
+export class AppComponent implements OnInit {
+
+	doIt() {
+		console.log('do it!');
+	}
+
+
+	ngOnInit() {
+
+	}
+
+}

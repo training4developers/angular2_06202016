@@ -1,0 +1,33 @@
+import { Component, OnInit, Directive, provide } from '@angular/core';
+import { FormControl, NG_VALIDATORS } from '@angular/forms';
+
+function myRequired(c: FormControl) {
+	if (c.value == null || String(c.value).length === 0) {
+		return { myRequired: { valid: false } };
+	}
+	return null;
+}
+
+@Directive({
+  selector: '[myRequired][ngModel]',
+	providers: [
+		provide(NG_VALIDATORS, {
+			useValue: myRequired,
+			multi: true
+		})
+	]
+})
+class MyRequiredValidator { }
+
+@Component({
+	selector: 'my-app',
+	template: `<form novalidate>
+		<input [(ngModel)]="message" name="message" myRequired>
+	</form>`,
+	directives: [MyRequiredValidator]
+})
+export class AppComponent {
+
+	message: string;
+
+}

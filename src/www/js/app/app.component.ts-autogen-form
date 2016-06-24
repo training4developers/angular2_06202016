@@ -1,0 +1,24 @@
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, REACTIVE_FORM_DIRECTIVES } from '@angular/forms';
+
+@Component({
+	selector: 'my-app',
+	template: `<form novalidate>
+		<ul>
+			<li *ngFor="let message of messages; let i = index">
+				<input type="text" (ngModel)="messages[i]" name="message{{i}}">
+			</li>
+			<button (click)='showMessages()'>Show Messages</button>
+		</ul>
+	</form>`,
+	directives: [ REACTIVE_FORM_DIRECTIVES ]
+})
+export class AppComponent {
+
+	messages: string[] = ['msg 1','msg 2','msg 3'];
+
+	showMessages() {
+		console.dir(this.messages);
+	}
+
+}
