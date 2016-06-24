@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core'
-import { ROUTER_DIRECTIVES } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CarDetails } from '../components/car-details.ts';
 import { CarsData } from '../services/cars.ts';
 import { Subscription } from 'rxjs/Rx';
@@ -8,17 +8,27 @@ import { Subscription } from 'rxjs/Rx';
 	template: `<h2>Car Details</h2>
 		<car-details [car]="car"></car-details>
 	`,
-	directives: [ CarDetails ]
+	directives: [ CarDetails ],
+	providers: [ CarsData ]
 })
 export class CarReadOnlyView implements OnInit, OnDestroy {
 
 	car: Object;
 	sub: Subscription;
 
-	constructor(private carsData: CarsData) { }
+	constructor(
+		private router: Router,
+		private route: ActivatedRoute,
+		private carsData: CarsData
+	) { }
 
 	ngOnInit() {
-		this.sub = this.carsData.get(0).subscribe(car => this.car = car);
+
+		this.route.params.subscribe(params => {
+			this.sub = this.carsData.get(params['id'])
+				.subscribe(car => this.car = car);
+		});
+
 	}
 
 	ngOnDestroy() {

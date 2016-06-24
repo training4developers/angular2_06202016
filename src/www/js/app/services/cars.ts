@@ -25,7 +25,7 @@ export class CarsData {
 	// }
 
 	get(carId: number): Observable<Object> {
-		return this.get('/api/cars/' + encodeURIComponent(carId.toString()))
+		return this.http.get('/api/cars/' + encodeURIComponent(carId.toString()))
 			.map(res => res.json());
 	}
 
