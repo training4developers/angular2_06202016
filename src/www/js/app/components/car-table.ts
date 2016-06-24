@@ -1,69 +1,68 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Cars } from '../services/cars.ts';
-import { ICar } from '../interfaces/icar.ts';
-import { Car } from '../models/car.ts';
+import { Component, Input, Output, EventEmitter } from '@angular/core'
 
 @Component({
-  selector: 'my-app',
-  template: `Color Filter: <input type="text" [(ngModel)]="colorFilter">
-	<table>
+	selector: 'car-table',
+	template: `<table>
 		<thead>
 			<tr>
+				<th>#</th>
 				<th>Make</th>
 				<th>Model</th>
 				<th>Year</th>
 				<th>Color</th>
+				<th>Price</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr *ngFor="let car of sortedCars">
-				<td>{{car.make}}</td>
-				<td>{{car.model}}</td>
-				<td>{{car.year}}</td>
-				<td>{{car.color}}</td>
-			</tr>
+		<tr *ngFor='let car of cars; let carIndex = index'>
+			<td>{{carIndex + 1}}</td>
+			<td>{{car.make}}</td>
+			<td>{{car.model}}</td>
+			<td>{{car.year}}</td>
+			<td>{{car.color}}</td>
+			<td>{{car.price}}</td>
+			<td>
+				<button type="button" (click)="carViewButton(car.id)">View</button>
+				<button type="button" (click)="carEditButton(car.id)">Edit</button>
+			</td>
+		</tr>
 		</tbody>
-	</table>
-	<button (click)="createCar()">Create Car</button>`
+	</table>`
 })
-export class CarTable implements OnInit {
+export class CarTableComponent {
 
-	constructor(
-		private router: Router,
-		private carsSvc: Cars
-	) { }
+	@Input('the-cars')
+	cars: Object[];
 
-	cars: ICar[] = [];
-	colorFilter: string = '';
+	@Output()
+	carView: EventEmitter<number> = new EventEmitter<number>();
 
-	private lastCars: ICar[] = null;
-	private filteredCars: any[];
+	@Output()
+	carEdit: EventEmitter<number> = new EventEmitter<number>();
 
-	ngOnInit() {
-		this.cars = this.carsSvc.getAll();
+	carViewButton(carId: number) {
+		this.carView.emit(carId);
 	}
 
-	createCar() {
-		this.router.navigate(['/create']);
-	}
-
-	get sortedCars() {
-
-		if (this.lastCars !== this.cars) {
-			this.filteredCars = [];
-			this.cars.sort((carA, carB) => carA.year - carB.year);
-			this.lastCars = this.cars;
-		}
-
-		if (this.filteredCars[this.colorFilter]) {
-			return this.filteredCars[this.colorFilter];
-		}
-
-		return this.filteredCars[this.colorFilter] = this.cars.filter(car =>
-			this.colorFilter.length === 0 || car.color.startsWith(this.colorFilter)
-		);
-
+	carEditButton(carId) {
+		this.carEdit.emit(carId);
 	}
 
 }
+
+
+// @Component({
+// 	selector: 'paginated-car-table',
+// 	template: `<car-table [cars]='paginatedCars'></car-table>
+// 		<div><button>Previous></button><button>Previous></button>`
+// })
+// export class PaginatedCarTable {
+//
+// 	@Input()
+// 	cars
+//
+// 	get paginatedCars() {
+// 		return cars.slice()
+// 	}
+//
+// }

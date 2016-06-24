@@ -1,23 +1,27 @@
-import { Injectable } from '@angular/core';
-import { ICar } from '../interfaces/icar.ts';
-import { Car } from '../models/car.ts';
+import { Injectable } from '@angular/core'
+import { Http } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
-export class Cars {
+export class CarsData {
 
-	private cars: ICar[] = [
-		new Car('Lambourghini', 'Diablo', 2018, 'red'),
-		new Car('Ford', 'Pinto', 1978, 'hot pink'),
-		new Car('Gily', 'S', 2015, 'teal')
-	];
+	constructor(private http: Http) { }
 
-	getAll(): ICar[] {
-		return this.cars;
+	getAll(): Observable<Object[]> {
+		return this.http.get('/api/cars').map(res => res.json());
+		// return this.http.get('/api/cars').map(res => {
+		// 	return res.json()
+		// });
+		// return this.http.get('/api/cars').map(function(res) {
+		// 	return res.json()
+		// });
 	}
 
-	add(car: ICar): Cars {
-		this.cars = this.cars.concat(car);
-		return this;
-	}
+	// getAll(): Promise<Object[]> {
+	// 	return this.http.get('/api/cars').toPromise().then(res => res.json());
+	// }
 
 }
